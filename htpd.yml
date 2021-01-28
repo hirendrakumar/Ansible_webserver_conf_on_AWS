@@ -1,0 +1,50 @@
+---
+- hosts: localhost
+  vars_files: 
+      - secure.yml
+  tasks:
+  - name: hello 
+    ec2:
+      key_name: mykey11
+      instance_type: t2.micro
+      region: ap-south-1
+      image: ami-0a9d27a9f4f5c0efc
+      vpc_subnet_id: subnet-03a951776444f8ab7
+      wait: yes
+      count: 1
+      instance_tags:
+           name: myOS
+      assign_public_ip: yes
+      aws_access_key: "{{ access_kay }}"
+      aws_secret_key: "{{ secret_key }}"
+      group_id: sg-0040e7dcb8558adf4
+    register: output
+
+  - name: print outpur
+    debug:
+       var: output
+
+
+  - name: pause
+    meta: refresh_inventory
+
+  - name: sleep
+    command: sleep 90
+
+- hosts: tag_name_myOS
+  tasks: 
+  - name: runing roles
+    include_role:
+           name: httpdrole
+    register: output1
+
+  - name: print output1
+    debug:
+        var: output1
+
+
+
+
+
+
+
